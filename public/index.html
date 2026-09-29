@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>RecallDesk</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #17243a;
+            height: 100vh;
+        }
+
+        .app {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 260px;
+            background: #17243a;
+            color: white;
+            padding: 25px 20px;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            font-size: 13px;
+            color: #b9c4d4;
+            margin-bottom: 35px;
+        }
+
+        .memory-box {
+            background: rgba(255,255,255,0.08);
+            padding: 18px;
+            border-radius: 12px;
+        }
+
+        .memory-box h3 {
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+
+        .memory-box p {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #d7deea;
+        }
+
+        .status {
+            margin-top: 25px;
+            font-size: 13px;
+        }
+
+        .status span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #4ade80;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        /* MAIN */
+
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 30px;
+            border-bottom: 1px solid #e2e7ef;
+        }
+
+        .header h1 {
+            font-size: 22px;
+        }
+
+        .header p {
+            margin-top: 5px;
+            color: #68758a;
+            font-size: 14px;
+        }
+
+        /* CHAT */
+
+        .chat {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .message {
+            max-width: 700px;
+            margin-bottom: 20px;
+            padding: 15px 18px;
+            border-radius: 14px;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        .agent {
+            background: white;
+            border: 1px solid #e2e7ef;
+            margin-right: auto;
+        }
+
+        .user {
+            background: #17243a;
+            color: white;
+            margin-left: auto;
+        }
+
+        .label {
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            opacity: 0.65;
+            text-transform: uppercase;
+        }
+
+        /* INPUT */
+
+        .input-area {
+            background: white;
+            border-top: 1px solid #e2e7ef;
+            padding: 18px 25px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .input-area input {
+            flex: 1;
+            padding: 14px 16px;
+            border: 1px solid #ccd4df;
+            border-radius: 10px;
+            outline: none;
+            font-size: 15px;
+        }
+
+        .input-area input:focus {
+            border-color: #17243a;
+        }
+
+        .input-area button {
+            border: none;
+            background: #17243a;
+            color: white;
+            padding: 0 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .input-area button:hover {
+            opacity: 0.9;
+        }
+
+        .typing {
+            color: #68758a;
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 700px) {
+            .sidebar {
+                display: none;
+            }
+
+            .chat {
+                padding: 20px;
+            }
+
+            .input-area {
+                padding: 12px;
+            }
+        }
+        .customer-info {
+    margin-top: 15px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.remembered-info {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: 13px;
+}
+
+.remembered-info strong {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.remembered-info ul {
+    padding-left: 18px;
+    margin: 0;
+}
+
+.remembered-info li {
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            RecallDesk
+        </div>
+
+        <div class="tagline">
+            Support that remembers.
+        </div>
+
+       <div class="memory-box">
+
+    <h3>🧠 Memory Active</h3>
+
+    <p>
+        Hindsight remembers previous
+        customer interactions and helps
+        the agent provide personalized
+        support.
+    </p>
+
+    <div class="customer-info">
+        <strong>Customer</strong>
+        <br>
+        Ravi
+    </div>
+    <div class="remembered-info">
+    <strong>Remembered</strong>
+
+    <ul id="memoryList">
+        <li>Loading memories...</li>
+    </ul>
+</div>
+
+</div>
+
+        <div class="status">
+            <span></span>
+            Hindsight connected
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <header class="header">
+
+            <h1>Customer Support</h1>
+
+            <p>
+                Your support history is remembered
+                so you don't have to repeat yourself.
+            </p>
+
+        </header>
+
+
+        <!-- CHAT -->
+
+        <section class="chat" id="chat">
+
+            <div class="message agent">
+
+                <div class="label">
+                    RecallDesk
+                </div>
+
+                Hello! I'm RecallDesk. I remember
+                your previous support interactions
+                and can use them to help you faster.
+
+            </div>
+
+        </section>
+
+
+        <!-- INPUT -->
+
+        <div class="input-area">
+
+            <input
+                type="text"
+                id="messageInput"
+                placeholder="Describe your issue..."
+                autocomplete="off"
+            >
+
+            <button onclick="sendMessage()">
+                Send
+            </button>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script>
+
+async function sendMessage() {
+
+    const input = document.getElementById("messageInput");
+    const chat = document.getElementById("chat");
+
+    const message = input.value.trim();
+
+    if (!message) {
+        return;
+    }
+
+    // USER MESSAGE
+
+    const userMessage = document.createElement("div");
+
+    userMessage.className = "message user";
+
+    userMessage.innerHTML = `
+        <div class="label">You</div>
+        ${escapeHtml(message)}
+    `;
+
+    chat.appendChild(userMessage);
+
+    input.value = "";
+
+    chat.scrollTop = chat.scrollHeight;
+
+
+    // TYPING INDICATOR
+
+    const typing = document.createElement("div");
+
+    typing.className = "typing";
+
+    typing.textContent = "RecallDesk is remembering...";
+
+    chat.appendChild(typing);
+
+    chat.scrollTop = chat.scrollHeight;
+
+
+    try {
+
+        const response = await fetch("/chat", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                message: message
+            })
+
+        });
+
+
+        const data = await response.json();
+
+        typing.remove();
+
+
+        // AGENT RESPONSE
+
+        const agentMessage = document.createElement("div");
+
+        agentMessage.className = "message agent";
+
+        agentMessage.innerHTML = `
+            <div class="label">RecallDesk</div>
+            ${escapeHtml(data.response || "Sorry, I couldn't process that.")}
+        `;
+
+        chat.appendChild(agentMessage);
+
+        chat.scrollTop = chat.scrollHeight;
+
+
+    } catch (error) {
+
+        typing.remove();
+
+        const errorMessage = document.createElement("div");
+
+        errorMessage.className = "message agent";
+
+        errorMessage.innerHTML = `
+            <div class="label">Error</div>
+            Unable to connect to RecallDesk.
+        `;
+
+        chat.appendChild(errorMessage);
+
+    }
+
+}
+
+
+function escapeHtml(text) {
+
+    const div = document.createElement("div");
+
+    div.textContent = text;
+
+    return div.innerHTML;
+
+}
+
+
+document
+    .getElementById("messageInput")
+    .addEventListener("keydown", function(event) {
+
+        if (event.key === "Enter") {
+            sendMessage();
+        }
+
+    });
+    async function loadMemories() {
+
+    const memoryList = document.getElementById("memoryList");
+
+    try {
+
+        const response = await fetch("/memory");
+
+        const data = await response.json();
+
+        memoryList.innerHTML = "";
+
+        if (!data.success || !data.memories || data.memories.length === 0) {
+
+            memoryList.innerHTML = "<li>No memories found yet.</li>";
+
+            return;
+        }
+
+        data.memories.slice(0, 5).forEach(memory => {
+
+            const li = document.createElement("li");
+
+            li.textContent = memory;
+
+            memoryList.appendChild(li);
+
+        });
+
+    } catch (error) {
+
+        memoryList.innerHTML =
+            "<li>Unable to load memories.</li>";
+
+    }
+}
+
+loadMemories();
+
+</script>
+
+</body>
+</html>
